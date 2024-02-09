@@ -1,12 +1,18 @@
-import Image from "next/image";
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center font-mono p-24">
+      <div className="flex w-full">
+      <div className="flex-1"></div>
+      <div className="">
+        <UserButton afterSignOutUrl="/"/>
+      </div>
+      </div>
       <div>Welcome to the Valentines Matchmaker</div>
       <div>Here are the rules</div>
-      <div className="pt-24">
+      <div className="pt-24 ">
         <div>
           1. We will try to match you but we can&apos;t guarantee a matching
         </div>
@@ -37,6 +43,10 @@ export default function Home() {
           perform this matching.{" "}
         </div>
         <div>
+          8. I couldn&apos;t figure out how to match non binary people,
+        </div>
+        <div>so choose the next best gender on the form</div>
+        <div>
           For more info, check out{" "}
           <Link
             href="https://pypi.org/project/Valentine-Matcher-2024/"
@@ -57,7 +67,6 @@ export default function Home() {
           8. Stay safe out there, I do not assume any liability and by using
           this website, you agree to this
         </div>
-      </div>
       <div className="py-24">
         <div>
           Also, Check out{" "}
@@ -70,17 +79,17 @@ export default function Home() {
         <div>We are releasing it soon</div>
         <div>Good luck friends</div>
         <div>
-          reach out to me on {" "}
+          reach out to me on{" "}
           <Link
             href="https://discord.com/invite/Fqzse8Yjxh"
             className="underline"
           >
             Discord
-          </Link>
-          {" "} my name is bee
+          </Link>{" "}
+          my name is bee
         </div>
         <div>
-          Follow Rondevu on {" "}
+          Follow Rondevu on{" "}
           <Link
             href="https://www.instagram.com/rondevuapp/"
             className="underline"
@@ -88,6 +97,7 @@ export default function Home() {
             Instagram
           </Link>
         </div>
+      </div>
       </div>
     </main>
   );
