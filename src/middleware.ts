@@ -9,13 +9,11 @@ export default authMiddleware({
     afterAuth(auth, req, evt) {
         // Handle users who aren't authenticated
         if (!auth.userId && !auth.isPublicRoute) {
-          return redirectToSignIn({  });
+          return redirectToSignIn({ returnBackUrl : req.nextUrl.href });
         }
         
         // If the user is logged in and trying to access a protected route, allow them to access route
         if (auth.userId && !auth.isPublicRoute) {
-            console.log("yes");
-            
           return NextResponse.next();
         }
         // Allow users visiting public routes to access them
