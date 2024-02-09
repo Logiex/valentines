@@ -1,13 +1,15 @@
 "use client";
-import { Control, Controller, useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Interests from "@/interests";
-import { useEffect, useRef, useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 type ProfileType = {
   name: string;
   gender: "M" | "F";
   wants: "M" | "F";
   interests: { name: string; value: number }[];
+  instagram: string;
+  discord?: string;
 };
 
 const CreateProfileForm = () => {
@@ -17,8 +19,11 @@ const CreateProfileForm = () => {
     register,
     handleSubmit,
     watch,
+    formState: { errors },
   } = useForm<ProfileType>({
     defaultValues: {
+      gender: "M",
+      wants: "F",
       interests: Interests.map((val) => {
         return {
           name: val,
@@ -28,6 +33,8 @@ const CreateProfileForm = () => {
     },
   });
   const ints = watch("interests");
+  const gender = watch("gender");
+  const wants = watch("wants");
   let total = 0;
 
   ints.forEach((data) => {
@@ -36,7 +43,15 @@ const CreateProfileForm = () => {
   });
   const max = ints.length * 1.5;
   const remainder = max - total;
-  function onSubmitButton(data: any) {
+
+  const {data} = useQuery(gql`
+    query MyQuery {
+      testQuery
+    }
+  `);
+  
+
+  function onSubmitButton(data: ProfileType) {
     console.log(data);
   }
 
@@ -47,17 +62,26 @@ const CreateProfileForm = () => {
         <div>
           <div>First Name</div>
           <input
-            {...register("name")}
+            {...register("name", { required: true, maxLength: 20 })}
             type="text"
             placeholder="Michael"
             id="name"
           />
+          {errors.name?.type == "required" && <div>A username is required</div>}
+          {errors.name?.type == "maxLength" && (
+            <div>You have exceeded the max length</div>
+          )}
         </div>
         <div>
           <div>Gender</div>
           <div>
             Male
-            <input {...register("gender")} type="radio" value="M" />
+            <input
+              {...register("gender")}
+              type="radio"
+              value="M"
+              checked={gender == "M"}
+            />
           </div>
           <div>
             Female
@@ -70,10 +94,22 @@ const CreateProfileForm = () => {
           Male
         </label>
         <label>
-          <input {...register("wants")} type="radio" value="F" />
+          <input
+            {...register("wants")}
+            type="radio"
+            value="F"
+            checked={wants == "F"}
+          />
           Female
         </label>
-
+        <label>
+          Instagram Link
+          <input {...register("instagram")} type="text" />
+        </label>
+        <label>
+          Discord Link
+          <input {...register("discord")} type="text" />
+        </label>
         <div>What are your interests</div>
         {Interests.map((val, index) => {
           return (
