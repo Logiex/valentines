@@ -34,7 +34,7 @@ function makeClientWrapper(getToken:any){
           return {
             headers: {
               ...headers,
-              Poll_Authorizatiion: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           };
         });
@@ -56,7 +56,7 @@ function makeClientWrapper(getToken:any){
                       operation.setContext({
                         headers: {
                           ...oldHeaders,
-                          Poll_Authorizatiion: `Bearer ${accessToken}`,
+                          Authorization: `Bearer ${accessToken}`,
                         },
                       });
                       // retry the request, returning the new observable

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import Interests from "@/interests";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { CREATEVALENTINEPROFILE, MYVALENTINEPROFILEQUERY } from "@/gql/gql";
+import { UserButton } from "@clerk/nextjs";
 
 type ProfileType = {
   name: string;
@@ -66,11 +67,14 @@ const CreateProfileForm = () => {
         Instagram: data.instagram,
       },
     });
+    console.log(val.data);
+    
   }
 
   return (
     <div className="w-full h-full">
       <h1>Profile creator</h1>
+      <UserButton/>
       <form onSubmit={handleSubmit(onSubmitButton)} className="flex flex-col">
         <div>
           <div>First Name</div>
@@ -115,13 +119,13 @@ const CreateProfileForm = () => {
           />
           Female
         </label>
-        <label>Instagram Link</label>
+        <label>Instagram username</label>
         <input
           {...register("instagram")}
           type="text"
           placeholder="Instagram Link"
         />
-        <label>Discord Link</label>
+        <label>Discord username</label>
         <input
           {...register("discord")}
           type="text"
@@ -135,6 +139,8 @@ const CreateProfileForm = () => {
         />
         <div>What are your interests</div>
         {Interests.map((val, index) => {
+          const score = ints[index].score.toString()
+          const scoreNum = parseInt(score)
           return (
             <label key={index}>
               {val}
@@ -145,8 +151,8 @@ const CreateProfileForm = () => {
                     {...register(`interests.${index}.score`)}
                     type="radio"
                     value={number}
-                    checked={ints[index].score == number}
-                    disabled={remainder < number}
+                    checked={scoreNum == number}
+                    disabled={number > scoreNum + remainder}
                   />
                 );
               })}
@@ -171,7 +177,7 @@ const Game = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center font-mono p-24">
-      {!loading && data ? <Matches /> : <CreateProfileForm />}
+      {!(!loading && data) ? <Matches /> : <CreateProfileForm />}
     </div>
   );
 };
