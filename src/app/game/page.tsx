@@ -4,7 +4,7 @@ import Interests from "@/interests";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { CREATEVALENTINEPROFILE, MYVALENTINEPROFILEQUERY } from "@/gql/gql";
 import { UserButton } from "@clerk/nextjs";
-
+import { PacmanLoader } from "react-spinners";
 type ProfileType = {
   name: string;
   gender: "M" | "F";
@@ -68,13 +68,12 @@ const CreateProfileForm = () => {
       },
     });
     console.log(val.data);
-    
   }
 
   return (
     <div className="w-full h-full">
       <h1>Profile creator</h1>
-      <UserButton/>
+      <UserButton />
       <form onSubmit={handleSubmit(onSubmitButton)} className="flex flex-col">
         <div>
           <div>First Name</div>
@@ -121,7 +120,7 @@ const CreateProfileForm = () => {
         </label>
         <label>Instagram username</label>
         <input
-          {...register("instagram")}
+          {...register("instagram", { required: true })}
           type="text"
           placeholder="Instagram Link"
         />
@@ -133,14 +132,14 @@ const CreateProfileForm = () => {
         />
         <label>Email</label>
         <input
-          {...register("email")}
+          {...(register("email"), { required: true })}
           type="text"
           placeholder="Eminem@AOL.com"
         />
         <div>What are your interests</div>
         {Interests.map((val, index) => {
-          const score = ints[index].score.toString()
-          const scoreNum = parseInt(score)
+          const score = ints[index].score.toString();
+          const scoreNum = parseInt(score);
           return (
             <label key={index}>
               {val}
@@ -177,7 +176,7 @@ const Game = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center font-mono p-24">
-      {(!loading && data) ? <Matches /> : <CreateProfileForm />}
+      {loading ? <PacmanLoader /> : data ? <Matches /> : <CreateProfileForm />}
     </div>
   );
 };

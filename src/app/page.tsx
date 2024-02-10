@@ -2,14 +2,13 @@ import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { server_url } from "@/server";
 export default function Home() {
-  
   return (
     <main className="flex min-h-screen flex-col items-center font-mono p-24">
       <div className="flex w-full">
-      <div className="flex-1"></div>
-      <div className="">
-        <UserButton afterSignOutUrl="/"/>
-      </div>
+        <div className="flex-1"></div>
+        <div className="">
+          <UserButton afterSignOutUrl="/" />
+        </div>
       </div>
       <div>Welcome to the Valentines Matchmaker</div>
       <div>Here are the rules</div>
@@ -25,30 +24,49 @@ export default function Home() {
           your interests
         </div>
         <div>
-          It&apos;s in your best interest to expend your points to maximize your
-          chances of the match
+          4. It&apos;s in your best interest to expend your points to maximize
+          your chances of the match
         </div>
-        <div>As the game master, I will not be participating in this game</div>
-        <div>4. We try to match people with the same interests</div>
+        <div>5. We try to match people with the same interests</div>
         <div>
-          5. If we can&apos;t get you a romantic match, we will try to get you a
+          6. If we can&apos;t get you a romantic match, we will try to get you a
           friendly match
         </div>
         <div>
-          6. If you match, It&apos;s up to you to decide if you&apos;ll go
+          7. If you match, It&apos;s up to you to decide if you&apos;ll go
           forward with it.
         </div>
-        <div>We will social media with your match. Instagram is required.</div>
+        <div>8. A valid Instagram account is required.</div>
         <div>
-          7. We will be using the hungarian bipartide matching algorithm to
+          9. We will be using the hungarian bipartide matching algorithm to
           perform this matching.{" "}
         </div>
         <div>
-          8. I couldn&apos;t figure out how to match non binary people,
+          10. I couldn&apos;t figure out how to match non binary people,
         </div>
         <div>so choose the next best gender on the form</div>
         <div>
-          For more info, check out{" "}
+          11. If you do not get a romantic match, we will put you into the bro
+          matching phase.
+        </div>
+        <div>12. Malicious activity will not be tolerated.</div>
+        <div>
+          13. If you notice something suspicious, like the instagram account
+          doesn&apos;t exist,
+        </div>
+        <div>
+          or the user is a fake, or someone is acting maliciously, DM me on
+          discord.
+        </div>
+        <div>
+          14. Stay safe out there, I do not assume any liability and by using
+          this website,
+        </div>
+        <div>you agree to abide by these rules / terms and conditions.</div>
+
+        <div className="pt-4">If you want to suggest an interest, dm me on discord</div>
+        <div className="pt-4">
+          For more info about the matching, check out{" "}
           <Link
             href="https://pypi.org/project/Valentine-Matcher-2024/"
             className="underline"
@@ -65,40 +83,40 @@ export default function Home() {
           for a synopsis of the general algorithm
         </div>
         <div>
-          8. Stay safe out there, I do not assume any liability and by using
-          this website, you agree to this
+          If you want the source code for the algorithm, ask me. I may publish
+          it on github later.
         </div>
-      <div className="py-24">
-        <div>
-          Also, Check out{" "}
-          <Link href="http://www.rondevu.app" className="underline">
-            Rondevu
-          </Link>{" "}
-          The social hangout app I&apos;m building.
-        </div>
+        <div className="py-24">
+          <div>
+            Also, Check out{" "}
+            <Link href="http://www.rondevu.app" className="underline">
+              Rondevu
+            </Link>{" "}
+            The social hangout app I&apos;m building.
+          </div>
 
-        <div>We are releasing it soon</div>
-        <div>Good luck friends</div>
-        <div>
-          reach out to me on{" "}
-          <Link
-            href="https://discord.com/invite/Fqzse8Yjxh"
-            className="underline"
-          >
-            Discord
-          </Link>{" "}
-          my name is bee
+          <div>We are releasing it soon</div>
+          <div>Good luck friends</div>
+          <div>
+            reach out to me on{" "}
+            <Link
+              href="https://discord.com/invite/Fqzse8Yjxh"
+              className="underline"
+            >
+              Discord
+            </Link>{" "}
+            my name is bee
+          </div>
+          <div>
+            Follow Rondevu on{" "}
+            <Link
+              href="https://www.instagram.com/rondevuapp/"
+              className="underline"
+            >
+              Instagram
+            </Link>
+          </div>
         </div>
-        <div>
-          Follow Rondevu on{" "}
-          <Link
-            href="https://www.instagram.com/rondevuapp/"
-            className="underline"
-          >
-            Instagram
-          </Link>
-        </div>
-      </div>
       </div>
     </main>
   );
