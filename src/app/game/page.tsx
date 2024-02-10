@@ -2,14 +2,16 @@
 import { useForm } from "react-hook-form";
 import Interests from "@/interests";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { CREATEVALENTINEPROFILE, MYVALENTINEPROFILEQUERY } from "@/gql/gql";
 
 type ProfileType = {
   name: string;
   gender: "M" | "F";
   wants: "M" | "F";
-  interests: { name: string; value: number }[];
+  interests: { name: string; score: number }[];
   instagram: string;
   discord?: string;
+  email: string;
 };
 
 const CreateProfileForm = () => {
@@ -27,7 +29,7 @@ const CreateProfileForm = () => {
       interests: Interests.map((val) => {
         return {
           name: val,
-          value: 0,
+          score: 0,
         };
       }),
     },
@@ -38,21 +40,32 @@ const CreateProfileForm = () => {
   let total = 0;
 
   ints.forEach((data) => {
-    const num: string = data.value.toString();
+    const num: string = data.score.toString();
     total += parseInt(num);
   });
   const max = ints.length * 1.5;
   const remainder = max - total;
 
-  const {data} = useQuery(gql`
-    query MyQuery {
-      testQuery
-    }
-  `);
-  
+  const [valentineMutation] = useMutation(CREATEVALENTINEPROFILE, {
+    refetchQueries: [MYVALENTINEPROFILEQUERY],
+  });
 
-  function onSubmitButton(data: ProfileType) {
-    console.log(data);
+  async function onSubmitButton(data: ProfileType) {
+    data.interests = data.interests.map((interest) => {
+      const score: string = interest.score.toString();
+      return { name: interest.name, score: parseInt(score) };
+    });
+    const val = await valentineMutation({
+      variables: {
+        Name: data.name,
+        Gender: data.gender,
+        Wants: data.wants,
+        Email: data.name,
+        Interests: data.interests,
+        Discord: data.discord,
+        Instagram: data.instagram,
+      },
+    });
   }
 
   return (
@@ -102,14 +115,24 @@ const CreateProfileForm = () => {
           />
           Female
         </label>
-        <label>
-          Instagram Link
-          <input {...register("instagram")} type="text" />
-        </label>
-        <label>
-          Discord Link
-          <input {...register("discord")} type="text" />
-        </label>
+        <label>Instagram Link</label>
+        <input
+          {...register("instagram")}
+          type="text"
+          placeholder="Instagram Link"
+        />
+        <label>Discord Link</label>
+        <input
+          {...register("discord")}
+          type="text"
+          placeholder="Discord Link"
+        />
+        <label>Email</label>
+        <input
+          {...register("email")}
+          type="text"
+          placeholder="Eminem@AOL.com"
+        />
         <div>What are your interests</div>
         {Interests.map((val, index) => {
           return (
@@ -119,10 +142,10 @@ const CreateProfileForm = () => {
                 return (
                   <input
                     key={idx}
-                    {...register(`interests.${index}.value`)}
+                    {...register(`interests.${index}.score`)}
                     type="radio"
                     value={number}
-                    checked={ints[index].value == number}
+                    checked={ints[index].score == number}
                     disabled={remainder < number}
                   />
                 );
@@ -136,16 +159,19 @@ const CreateProfileForm = () => {
   );
 };
 const Matches = () => {
-  return <></>;
+  return (
+    <div>
+      <div>Hello</div>
+      <div>You have no matches yet</div>
+    </div>
+  );
 };
 const Game = () => {
-  const getProfile = (val: boolean) => {
-    return undefined;
-  };
+  const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
+
   return (
     <div className="flex min-h-screen flex-col items-center font-mono p-24">
-      {getProfile(false) ? <Matches /> : <CreateProfileForm />}
-      Hello
+      {!loading && data ? <Matches /> : <CreateProfileForm />}
     </div>
   );
 };
