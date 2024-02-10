@@ -177,7 +177,7 @@ const Game = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center font-mono p-24">
-      {!(!loading && data) ? <Matches /> : <CreateProfileForm />}
+      {(!loading && data) ? <Matches /> : <CreateProfileForm />}
     </div>
   );
 };
