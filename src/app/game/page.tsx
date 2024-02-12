@@ -226,9 +226,8 @@ const CreateProfileForm = () => {
           })}
 
           <div className="py-8 px-4 flex flex-col md:justify-center justify-end">
-            <button type="submit" className="border border-2 p-4">
-              Submit
-            </button>
+            <input type="submit" className="border border-2 p-4 cursor-pointer" />
+
             <div>The submit button may not work on mobile</div>
           </div>
         </form>
