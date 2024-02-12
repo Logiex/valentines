@@ -35,7 +35,7 @@ const CreateProfileForm = () => {
   } = useForm<ProfileType>({
     defaultValues: {
       gender: "M",
-      wants: "F",
+      wants: "M",
       interests: Interests.map((val) => {
         return {
           name: val,
@@ -157,7 +157,7 @@ const CreateProfileForm = () => {
             <input
               {...register("instagram", { required: true })}
               type="text"
-              placeholder="Instagram Link"
+              placeholder="Instagram Username"
               className="text-lg w-full border-1 border px-8 py-2"
             />
           </div>
@@ -166,7 +166,7 @@ const CreateProfileForm = () => {
             <input
               {...register("discord")}
               type="text"
-              placeholder="Discord Link"
+              placeholder="Discord Username"
               className="text-lg w-full border-1 border px-8 py-2"
             />
           </div>
@@ -175,7 +175,7 @@ const CreateProfileForm = () => {
             <input
               {...(register("email"), { required: true })}
               type="text"
-              placeholder="Eminem@AOL.com"
+              placeholder="bee@gmail.com"
               className="text-lg w-full border-1 border px-8 py-2"
             />
           </div>
