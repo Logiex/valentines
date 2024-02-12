@@ -10,6 +10,11 @@ import {
 import { UserButton } from "@clerk/nextjs";
 import { PacmanLoader } from "react-spinners";
 import { ReactNode } from "react";
+import { Lobster, Varela_Round } from "next/font/google";
+
+const headingFamily = Lobster({ subsets: ["latin"], weight: ["400"] });
+const mainFamily = Varela_Round({ subsets: ["latin"], weight: ["400"]})
+
 type ProfileType = {
   name: string;
   gender: "M" | "F";
@@ -20,6 +25,10 @@ type ProfileType = {
   email: string;
   _id: string | undefined;
 };
+
+const notEnoughPoints = () => {
+  alert('Not enough points')
+}
 
 const RadioSelect = ({ children }: { children: ReactNode }) => {
   return <div>{children}</div>;
@@ -96,8 +105,8 @@ const CreateProfileForm = () => {
     }
   };
   return (
-    <div className="w-full h-full flex items-center flex-col px-4">
-      <div className="pb-8">Profile creator</div>
+    <div className={`w-full h-full flex items-center flex-col px-4 ${mainFamily.className}`}>
+      <div className="pb-8 text-3xl">Profile creator</div>
       <div className="w-full flex-col items-start ">
         <form
           onSubmit={handleSubmit(onSubmitButton)}
@@ -110,7 +119,7 @@ const CreateProfileForm = () => {
               type="text"
               placeholder="My name"
               id="name"
-              className="text-lg w-full border-1 border px-8 py-2"
+              className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
             {errors.name?.type == "required" && <div>A name is required</div>}
             {errors.name?.type == "maxLength" && (
@@ -158,7 +167,7 @@ const CreateProfileForm = () => {
               {...register("instagram", { required: true })}
               type="text"
               placeholder="Instagram Username"
-              className="text-lg w-full border-1 border px-8 py-2"
+              className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
             {errors.instagram?.type == "required" && (
               <div>Instagram is required</div>
@@ -170,7 +179,7 @@ const CreateProfileForm = () => {
               {...register("discord")}
               type="text"
               placeholder="Discord Username"
-              className="text-lg w-full border-1 border px-8 py-2"
+              className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
           </div>
           <div className="pb-4">
@@ -179,29 +188,34 @@ const CreateProfileForm = () => {
               {...(register("email"), { required: true })}
               type="text"
               placeholder="bee@gmail.com"
-              className="text-lg w-full border-1 border px-8 py-2"
+              className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
             {errors.instagram?.type == "required" && (
               <div>Email is required</div>
             )}
           </div>
+          <div className="space-y-4">
           <div className="py-4">What are your interests?</div>
-          <div>Points left = {remainder}</div>
+          <span className="border-1 border px-8 py-2 rounded-lg w-fit border-[#d90429] flex flex-row items-center justify-center sticky top-10 bg-white ">Points left = <span className="text-3xl ml-2">{remainder}</span></span>
+          <div className="space-y-4">
           {Interests.map((val, index) => {
             const score = ints[index].score.toString();
             const scoreNum = parseInt(score);
             return (
-              <div key={index}>
-                <div>{val}</div>
-                <div className="flex flex-col md:flex-row">
+              <div key={index}
+              >
+                <div className="mb-4">{val}</div>
+                <div className="flex flex-col md:flex-row border-1 border px-8 py-2 rounded-lg">
                   {numbers.map((number, idx) => {
                     return (
                       <div
                         key={idx}
                         className={`flex flex-row px-4 items-center border border-1 md:border-0 my-1 ${
                           scoreNum == number ? "py-2" : ""
-                        } md:py-0`}
+                        } md:py-0 rounded-lg`}
+                        
                       >
+          
                         <input
                           id={`${val}.${index}.${idx}`}
                           {...register(`interests.${index}.score`)}
@@ -210,11 +224,10 @@ const CreateProfileForm = () => {
                           checked={scoreNum == number}
                           disabled={number > scoreNum + remainder}
                         />
-
+                      
                         <label
                           htmlFor={`${val}.${index}.${idx}`}
-                          className="px-2"
-                        >
+                          className="px-2">
                           {interestToString(idx)}
                         </label>
                       </div>
@@ -224,15 +237,17 @@ const CreateProfileForm = () => {
               </div>
             );
           })}
-
-          <div className="py-8 px-4 flex flex-col md:justify-center justify-end">
-            <input type="submit" className="border border-2 p-4 cursor-pointer" />
-
-            <div>The submit button may not work on mobile</div>
+          </div>
+          </div>
+          <div className="py-8 px-4 flex flex-row md:justify-center justify-end">
+            <button type="submit" className="border-2 p-4 rounded-lg  border-[#d90429] hover:cursor-pointer hover:scale-[1.2] hover:transform hover:ease-in-out duration-300">
+              Submit
+            </button>
           </div>
         </form>
       </div>
     </div>
+    
   );
 };
 
@@ -297,7 +312,7 @@ const Matches = ({ id }: { id: string }) => {
               {matches.map((val, index) => {
                 const match = extractMatch(val);
                 return (
-                  <div key={index} className="py-2 px-4 my-2 border border-2">
+                  <div key={index} className="py-2 px-4 my-2 border-2">
                     <div className="py-2 ">
                       <div>You Matched With:</div>
                       <div>
