@@ -160,6 +160,7 @@ const CreateProfileForm = () => {
               placeholder="Instagram Username"
               className="text-lg w-full border-1 border px-8 py-2"
             />
+            {errors.instagram?.type == "required" && <div>Instagram is required</div>}
           </div>
           <div className="pb-4">
             <label className="flex text-lg py-2">Discord username</label>
@@ -178,6 +179,7 @@ const CreateProfileForm = () => {
               placeholder="bee@gmail.com"
               className="text-lg w-full border-1 border px-8 py-2"
             />
+            {errors.instagram?.type == "required" && <div>Email is required</div>}
           </div>
           <div className="py-4">What are your interests?</div>
           <div>Points left = {remainder}</div>
