@@ -11,7 +11,7 @@ export default function Home() {
         </div>
       </div>
       <div>Welcome to the Valentines Matchmaker</div>
-      <div>Here are the rules</div>
+      <div>Here are the rules and stuff to know about</div>
       <div className="pt-24 ">
         <div>
           1. We will try to match you but we can&apos;t guarantee a matching
@@ -42,16 +42,16 @@ export default function Home() {
           perform this matching.{" "}
         </div>
         <div>
-          10. I couldn&apos;t figure out how to match non binary people,
+          10. I couldn&apos;t figure out how to match non binary people, so choose the next best gender on the form
         </div>
-        <div>so choose the next best gender on the form</div>
+        <div>11. I also couldn&apos;t figure out how to match bisexual people, so you have to choose one in the form</div>
         <div>
-          11. If you do not get a romantic match, we will put you into the bro
+          12. If you do not get a romantic match, we will put you into the bro
           matching phase.
         </div>
-        <div>12. Malicious activity will not be tolerated.</div>
+        <div>13. Malicious activity will not be tolerated.</div>
         <div>
-          13. If you notice something suspicious, like the instagram account
+          14. If you notice something suspicious, like the instagram account
           doesn&apos;t exist,
         </div>
         <div>
@@ -59,7 +59,7 @@ export default function Home() {
           discord.
         </div>
         <div>
-          14. Stay safe out there, I do not assume any liability and by using
+          15. Stay safe out there, I do not assume any liability and by using
           this website,
         </div>
         <div>you agree to abide by these rules / terms and conditions.</div>
@@ -98,7 +98,7 @@ export default function Home() {
         <div>
           <div>
             Also, Check out{" "}
-            <Link href="http://www.rondevu.app" className="underline">
+            <Link href="http://www.rondevu.app" className="underline px-2 border border-1 py-1 text-red-500">
               Rondevu
             </Link>{" "}
             The social hangout app I&apos;m building.
@@ -110,7 +110,7 @@ export default function Home() {
             reach out to me on{" "}
             <Link
               href="https://discord.com/invite/Fqzse8Yjxh"
-              className="underline"
+              className="underline px-2 border border-1 py-1"
             >
               Discord
             </Link>{" "}
@@ -120,7 +120,7 @@ export default function Home() {
             Follow Rondevu on{" "}
             <Link
               href="https://www.instagram.com/rondevuapp/"
-              className="underline"
+              className="underline px-2 border border-1 py-1"
             >
               Instagram
             </Link>
