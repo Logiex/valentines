@@ -220,7 +220,9 @@ const CreateProfileForm = () => {
             );
           })}
           <div className="py-8 px-4 flex flex-row md:justify-center justify-end">
-            <button type="submit" className="border border-2 p-4">Submit</button>
+            <button type="submit" className="border border-2 p-4">
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -340,7 +342,7 @@ const Game = () => {
       </div>
       {loading ? (
         <PacmanLoader />
-      ) : !data ? (
+      ) : data ? (
         <Matches id={id} />
       ) : (
         <CreateProfileForm />
