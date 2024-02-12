@@ -252,18 +252,6 @@ const Matches = ({ id }: { id: string }) => {
     const them = extractMatch(match);
     const me = extractMe(match);
 
-    const theirs = new Set(
-      them.interests
-        .filter((interest) => interest.score > 0)
-        .map((interest) => interest.name)
-    );
-
-    const mine = new Set(
-      me.interests
-        .filter((interest) => interest.score > 0)
-        .map((interest) => interest.name)
-    );
-
     const theirs2 = them.interests
       .filter((interest) => interest.score > 0)
       .map((interest) => interest);
@@ -286,7 +274,6 @@ const Matches = ({ id }: { id: string }) => {
         return { me: mine3[val], them: theirs3[val], interest: val };
       });
 
-    const res = Array.from(theirs).filter((val) => mine.has(val));
     return res2;
   };
 
@@ -296,9 +283,9 @@ const Matches = ({ id }: { id: string }) => {
         <PacmanLoader />
       ) : (
         <div>
-          <div>Hello</div>
-          {matches ? (
+          {matches && matches.length > 0 ? (
             <div>
+              <div>Hello {extractMe(matches[0]).name},</div>
               Here are your matches...
               {matches.map((val, index) => {
                 const match = extractMatch(val);
