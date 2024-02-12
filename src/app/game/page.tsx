@@ -76,7 +76,6 @@ const CreateProfileForm = () => {
         Instagram: data.instagram,
       },
     });
-    console.log(val.data);
   }
   const interestToString = (num: number) => {
     switch (num) {
@@ -240,7 +239,6 @@ type Matching = {
 const Matches = ({ id }: { id: string }) => {
   const { data, loading, error } = useQuery(MYMATCHESQUERY);
   const matches: Matching[] | undefined = data?.valentineMatches;
-  data?.valentineMatches && console.log(matches);
   const extractMatch = (match: Matching) => {
     const other = match.valentines.filter((val) => val._id !== id);
     return other[0];
@@ -266,8 +264,30 @@ const Matches = ({ id }: { id: string }) => {
         .map((interest) => interest.name)
     );
 
+    const theirs2 = them.interests
+      .filter((interest) => interest.score > 0)
+      .map((interest) => interest);
+    const theirs3: any = {};
+    for (const key of theirs2) {
+      theirs3[key.name] = key.score;
+    }
+
+    const mine2 = me.interests
+      .filter((interest) => interest.score > 0)
+      .map((interest) => interest);
+
+    const mine3: any = {};
+    for (const key of mine2) {
+      mine3[key.name] = key.score;
+    }
+    const res2 = Array.from(Object.keys(theirs3))
+      .filter((val: any) => !!mine3[val])
+      .map((val: string) => {
+        return { me: mine3[val], them: theirs3[val], interest: val };
+      });
+
     const res = Array.from(theirs).filter((val) => mine.has(val));
-    return res;
+    return res2;
   };
 
   return (
@@ -281,8 +301,6 @@ const Matches = ({ id }: { id: string }) => {
             <div>
               Here are your matches...
               {matches.map((val, index) => {
-                console.log(`with ${val}`);
-
                 const match = extractMatch(val);
                 return (
                   <div key={index} className="py-2 px-4 my-2 border border-2">
@@ -297,13 +315,16 @@ const Matches = ({ id }: { id: string }) => {
                     <div className="py-2">This is a {val.matchType}</div>
                     <div className="py-2">
                       <div>You both share these matching interests</div>
-                      <div>
+                      <div className="py-4">
                         {matchingInterests(val).map((interest, idx) => (
-                          <div key={idx}>{interest}</div>
+                          <div key={idx} className="py-1">
+                            Interest : {interest.interest}, My Score :
+                            {interest.me}, Their Score : {interest.them}
+                          </div>
                         ))}
                       </div>
                     </div>
-                    <div className="py-2">
+                    <div className="pb-2 ">
                       We determined that your compatability score is {val.score}
                     </div>
                     <div className="py-2">
