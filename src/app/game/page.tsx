@@ -9,6 +9,7 @@ import {
 } from "@/gql/gql";
 import { UserButton } from "@clerk/nextjs";
 import { PacmanLoader } from "react-spinners";
+import { ReactNode } from "react";
 type ProfileType = {
   name: string;
   gender: "M" | "F";
@@ -20,6 +21,9 @@ type ProfileType = {
   _id: string | undefined;
 };
 
+const RadioSelect = ({ children }: { children: ReactNode }) => {
+  return <div>{children}</div>;
+};
 const CreateProfileForm = () => {
   const numbers = [0, 1, 2, 3, 4, 5];
 
@@ -74,97 +78,152 @@ const CreateProfileForm = () => {
     });
     console.log(val.data);
   }
-
+  const interestToString = (num: number) => {
+    switch (num) {
+      case 0:
+        return "Don't Like";
+      case 1:
+        return "Barely Like";
+      case 2:
+        return "Somewhat Like";
+      case 3:
+        return "Like";
+      case 4:
+        return "Really Like";
+      case 5:
+        return "Like a lot";
+      default:
+        return "Like a lot";
+    }
+  };
   return (
-    <div className="w-full h-full">
-      <h1>Profile creator</h1>
-      <UserButton />
-      <form onSubmit={handleSubmit(onSubmitButton)} className="flex flex-col">
-        <div>
-          <div>First Name</div>
-          <input
-            {...register("name", { required: true, maxLength: 20 })}
-            type="text"
-            placeholder="Michael"
-            id="name"
-          />
-          {errors.name?.type == "required" && <div>A username is required</div>}
-          {errors.name?.type == "maxLength" && (
-            <div>You have exceeded the max length</div>
-          )}
-        </div>
-        <div>
-          <div>Gender</div>
-          <div>
-            Male
+    <div className="w-full h-full flex items-center flex-col px-4">
+      <div className="pb-8">Profile creator</div>
+      <div className="w-full flex-col items-start ">
+        <form
+          onSubmit={handleSubmit(onSubmitButton)}
+          className="flex flex-col lg:px-16"
+        >
+          <div className="py-4">
+            <div className="flex text-lg py-2">First Name</div>
             <input
-              {...register("gender")}
-              type="radio"
-              value="M"
-              checked={gender == "M"}
+              {...register("name", { required: true, maxLength: 20 })}
+              type="text"
+              placeholder="My name"
+              id="name"
+              className="text-lg w-full border-1 border px-8 py-2"
+            />
+            {errors.name?.type == "required" && <div>A name is required</div>}
+            {errors.name?.type == "maxLength" && (
+              <div>You have exceeded the max length</div>
+            )}
+          </div>
+          <div className="pb-4">
+            <div className="py-2">Gender</div>
+            <div className="flex">
+              <input
+                {...register("gender")}
+                type="radio"
+                value="M"
+                checked={gender == "M"}
+              />
+              <div className="px-4">M</div>
+              <input {...register("gender")} type="radio" value="F" />
+              <div className="px-4">F</div>
+            </div>
+          </div>
+
+          <div className="pb-4">
+            <p>Who are you looking for</p>
+
+            <div className="flex">
+              <input
+                {...register("wants")}
+                type="radio"
+                value="M"
+                className="px-4"
+              />
+              <div className="px-4">M</div>
+              <input
+                {...register("wants")}
+                type="radio"
+                value="F"
+                checked={wants == "F"}
+              />
+              <div className="px-4">F</div>
+            </div>
+          </div>
+          <div className="pb-4">
+            <label className="flex text-lg py-2">Instagram username</label>
+            <input
+              {...register("instagram", { required: true })}
+              type="text"
+              placeholder="Instagram Link"
+              className="text-lg w-full border-1 border px-8 py-2"
             />
           </div>
-          <div>
-            Female
-            <input {...register("gender")} type="radio" value="F" />
+          <div className="pb-4">
+            <label className="flex text-lg py-2">Discord username</label>
+            <input
+              {...register("discord")}
+              type="text"
+              placeholder="Discord Link"
+              className="text-lg w-full border-1 border px-8 py-2"
+            />
           </div>
-        </div>
-        <p>Who are you looking for</p>
-        <label>
-          <input {...register("wants")} type="radio" value="M" />
-          Male
-        </label>
-        <label>
-          <input
-            {...register("wants")}
-            type="radio"
-            value="F"
-            checked={wants == "F"}
-          />
-          Female
-        </label>
-        <label>Instagram username</label>
-        <input
-          {...register("instagram", { required: true })}
-          type="text"
-          placeholder="Instagram Link"
-        />
-        <label>Discord username</label>
-        <input
-          {...register("discord")}
-          type="text"
-          placeholder="Discord Link"
-        />
-        <label>Email</label>
-        <input
-          {...(register("email"), { required: true })}
-          type="text"
-          placeholder="Eminem@AOL.com"
-        />
-        <div>What are your interests</div>
-        {Interests.map((val, index) => {
-          const score = ints[index].score.toString();
-          const scoreNum = parseInt(score);
-          return (
-            <label key={index}>
-              {val}
-              {numbers.map((number, idx) => {
-                return (
-                  <input
-                    key={idx}
-                    {...register(`interests.${index}.score`)}
-                    type="radio"
-                    value={number}
-                    checked={scoreNum == number}
-                    disabled={number > scoreNum + remainder}
-                  />
-                );
-              })}
-            </label>
-          );
-        })}
-        <button type="submit">Send</button>
-      </form>
+          <div className="pb-4">
+            <label className="flex text-lg py-2">Email</label>
+            <input
+              {...(register("email"), { required: true })}
+              type="text"
+              placeholder="Eminem@AOL.com"
+              className="text-lg w-full border-1 border px-8 py-2"
+            />
+          </div>
+          <div className="py-4">What are your interests?</div>
+          <div>Points left = {remainder}</div>
+          {Interests.map((val, index) => {
+            const score = ints[index].score.toString();
+            const scoreNum = parseInt(score);
+            return (
+              <div key={index}>
+                <div>{val}</div>
+                <div className="flex flex-col md:flex-row">
+                  {numbers.map((number, idx) => {
+                    return (
+                      <div
+                        key={idx}
+                        className={`flex flex-row px-4 items-center border border-1 md:border-0 my-1 ${
+                          scoreNum == number ? "py-2" : ""
+                        } md:py-0`}
+                      >
+                        <input
+                          id={`${val}.${index}.${idx}`}
+                          {...register(`interests.${index}.score`)}
+                          type="radio"
+                          value={number}
+                          checked={scoreNum == number}
+                          disabled={number > scoreNum + remainder}
+                        />
+
+                        <label
+                          htmlFor={`${val}.${index}.${idx}`}
+                          className="px-2"
+                        >
+                          {interestToString(idx)}
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+          <div className="py-8 px-4 flex flex-row md:justify-center justify-end">
+            <button type="submit" className="border border-2 p-4">Submit</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
@@ -275,13 +334,13 @@ const Game = () => {
   const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
   const id = data?.myValentineProfile?._id;
   return (
-    <div className="flex min-h-screen flex-col items-center font-mono p-24">
+    <div className="flex min-h-screen flex-col items-center font-mono px-4 py-24 lg:p-24">
       <div className="flex justify-end w-full">
         <UserButton />
       </div>
       {loading ? (
         <PacmanLoader />
-      ) : data ? (
+      ) : !data ? (
         <Matches id={id} />
       ) : (
         <CreateProfileForm />
