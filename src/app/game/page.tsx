@@ -357,7 +357,7 @@ const Game = () => {
       </div>
       {loading ? (
         <PacmanLoader />
-      ) : !data ? (
+      ) : data ? (
         <Matches id={id} />
       ) : (
         <CreateProfileForm />
