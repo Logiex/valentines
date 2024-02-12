@@ -9,9 +9,6 @@ export default function Home() {
           <UserButton afterSignOutUrl="/" />
         </div>
       </div>
-      <div className="text-5xl">
-        NOTE: THE APP CURRENTLY ISN&apos;T WORKING AND WE ARE TRYING TO FIX IT
-      </div>
       <div className="py-4 text-lg">Welcome to the Valentines Matchmaker</div>
       <div>Here are the rules and stuff to know about</div>
       <div className="pt-16 ">
