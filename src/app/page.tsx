@@ -1,18 +1,17 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { server_url } from "@/server";
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center font-mono p-24">
+    <main className="flex min-h-screen flex-col items-center font-mono py-24 px-8 md:px-24">
       <div className="flex w-full">
         <div className="flex-1"></div>
         <div className="">
           <UserButton afterSignOutUrl="/" />
         </div>
       </div>
-      <div>Welcome to the Valentines Matchmaker</div>
+      <div className="py-4 text-lg">Welcome to the Valentines Matchmaker</div>
       <div>Here are the rules and stuff to know about</div>
-      <div className="pt-24 ">
+      <div className="pt-16 ">
         <div>
           1. We will try to match you but we can&apos;t guarantee a matching
         </div>
@@ -89,7 +88,7 @@ export default function Home() {
           it on github later.
         </div>
         <Link href={"/game"}>
-          <div className="flex justify-end 	">
+          <div className="flex justify-center md:justify-end 	">
             <div className="border border-2 p-8 m-8">
               Check out the valentine matching -&gt;
             </div>
