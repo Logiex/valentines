@@ -160,7 +160,9 @@ const CreateProfileForm = () => {
               placeholder="Instagram Username"
               className="text-lg w-full border-1 border px-8 py-2"
             />
-            {errors.instagram?.type == "required" && <div>Instagram is required</div>}
+            {errors.instagram?.type == "required" && (
+              <div>Instagram is required</div>
+            )}
           </div>
           <div className="pb-4">
             <label className="flex text-lg py-2">Discord username</label>
@@ -179,7 +181,9 @@ const CreateProfileForm = () => {
               placeholder="bee@gmail.com"
               className="text-lg w-full border-1 border px-8 py-2"
             />
-            {errors.instagram?.type == "required" && <div>Email is required</div>}
+            {errors.instagram?.type == "required" && (
+              <div>Email is required</div>
+            )}
           </div>
           <div className="py-4">What are your interests?</div>
           <div>Points left = {remainder}</div>
@@ -220,10 +224,12 @@ const CreateProfileForm = () => {
               </div>
             );
           })}
-          <div className="py-8 px-4 flex flex-row md:justify-center justify-end">
+
+          <div className="py-8 px-4 flex flex-col md:justify-center justify-end">
             <button type="submit" className="border border-2 p-4">
               Submit
             </button>
+            <div>The submit button may not work on mobile</div>
           </div>
         </form>
       </div>
@@ -352,7 +358,7 @@ const Game = () => {
       </div>
       {loading ? (
         <PacmanLoader />
-      ) : data ? (
+      ) : !data ? (
         <Matches id={id} />
       ) : (
         <CreateProfileForm />
