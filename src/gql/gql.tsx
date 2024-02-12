@@ -44,3 +44,25 @@ export const CREATEVALENTINEPROFILE = gql`
     }
   }
 `;
+
+export const MYMATCHESQUERY = gql`
+  query MyQuery {
+    valentineMatches {
+      matchType
+      round
+      score
+      valentines {
+        _id
+        discord
+        gender
+        instagram
+        name
+        wants
+        interests {
+          name
+          score
+        }
+      }
+    }
+  }
+`;

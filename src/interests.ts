@@ -19,7 +19,6 @@ const Interests = [
   "Programming",
   "Technology",
   "Medicine",
-  "Defense",
 ];
 
 export default Interests

@@ -1,8 +1,12 @@
 "use client";
 import { useForm } from "react-hook-form";
 import Interests from "@/interests";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { CREATEVALENTINEPROFILE, MYVALENTINEPROFILEQUERY } from "@/gql/gql";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  CREATEVALENTINEPROFILE,
+  MYMATCHESQUERY,
+  MYVALENTINEPROFILEQUERY,
+} from "@/gql/gql";
 import { UserButton } from "@clerk/nextjs";
 import { PacmanLoader } from "react-spinners";
 type ProfileType = {
@@ -13,6 +17,7 @@ type ProfileType = {
   instagram: string;
   discord?: string;
   email: string;
+  _id: string | undefined;
 };
 
 const CreateProfileForm = () => {
@@ -163,20 +168,124 @@ const CreateProfileForm = () => {
     </div>
   );
 };
-const Matches = () => {
+
+type Matching = {
+  score: number;
+  round: number;
+  matchType: string;
+  valentines: ProfileType[];
+};
+
+const Matches = ({ id }: { id: string }) => {
+  const { data, loading, error } = useQuery(MYMATCHESQUERY);
+  const matches: Matching[] | undefined = data?.valentineMatches;
+  data?.valentineMatches && console.log(matches);
+  const extractMatch = (match: Matching) => {
+    const other = match.valentines.filter((val) => val._id !== id);
+    return other[0];
+  };
+  const extractMe = (match: Matching) => {
+    const other = match.valentines.filter((val) => val._id === id);
+    return other[0];
+  };
+
+  const matchingInterests = (match: Matching) => {
+    const them = extractMatch(match);
+    const me = extractMe(match);
+
+    const theirs = new Set(
+      them.interests
+        .filter((interest) => interest.score > 0)
+        .map((interest) => interest.name)
+    );
+
+    const mine = new Set(
+      me.interests
+        .filter((interest) => interest.score > 0)
+        .map((interest) => interest.name)
+    );
+
+    const res = Array.from(theirs).filter((val) => mine.has(val));
+    return res;
+  };
+
   return (
     <div>
-      <div>Hello</div>
-      <div>You have no matches yet</div>
+      {loading ? (
+        <PacmanLoader />
+      ) : (
+        <div>
+          <div>Hello</div>
+          {matches ? (
+            <div>
+              Here are your matches...
+              {matches.map((val, index) => {
+                console.log(`with ${val}`);
+
+                const match = extractMatch(val);
+                return (
+                  <div key={index} className="py-2 px-4 my-2 border border-2">
+                    <div className="py-2 ">
+                      <div>You Matched With:</div>
+                      <div>
+                        {match.name} in the {val.round} round of Matching
+                      </div>
+                      <div>Their gender: {match.gender} </div>
+                    </div>
+
+                    <div className="py-2">This is a {val.matchType}</div>
+                    <div className="py-2">
+                      <div>You both share these matching interests</div>
+                      <div>
+                        {matchingInterests(val).map((interest, idx) => (
+                          <div key={idx}>{interest}</div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="py-2">
+                      We determined that your compatability score is {val.score}
+                    </div>
+                    <div className="py-2">
+                      <div>Socials:</div>
+                      <div className="py-2">
+                        {match.discord && <div>Discord: {match.discord}</div>}
+                        <div>Instagram : {match.instagram}</div>
+                      </div>
+                      <div className="py-2">
+                        <div>
+                          Remember, stay safe and it&apos; up to you to decide
+                          if you want to reach out.
+                        </div>
+                        <div>If they reach out, please be friendly.</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div>You have no matches yet</div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 const Game = () => {
   const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
-
+  const id = data?.myValentineProfile?._id;
   return (
     <div className="flex min-h-screen flex-col items-center font-mono p-24">
-      {loading ? <PacmanLoader /> : data ? <Matches /> : <CreateProfileForm />}
+      <div className="flex justify-end w-full">
+        <UserButton />
+      </div>
+      {loading ? (
+        <PacmanLoader />
+      ) : data ? (
+        <Matches id={id} />
+      ) : (
+        <CreateProfileForm />
+      )}
     </div>
   );
 };

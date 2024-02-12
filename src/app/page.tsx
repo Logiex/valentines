@@ -64,7 +64,9 @@ export default function Home() {
         </div>
         <div>you agree to abide by these rules / terms and conditions.</div>
 
-        <div className="pt-4">If you want to suggest an interest, dm me on discord</div>
+        <div className="pt-4">
+          If you want to suggest an interest, dm me on discord
+        </div>
         <div className="pt-4">
           For more info about the matching, check out{" "}
           <Link
@@ -86,7 +88,14 @@ export default function Home() {
           If you want the source code for the algorithm, ask me. I may publish
           it on github later.
         </div>
-        <div className="py-24">
+        <Link href={"/game"}>
+          <div className="flex justify-end 	">
+            <div className="border border-2 p-8 m-8">
+              Check out the valentine matching -&gt;
+            </div>
+          </div>
+        </Link>
+        <div>
           <div>
             Also, Check out{" "}
             <Link href="http://www.rondevu.app" className="underline">
