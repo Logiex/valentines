@@ -13,28 +13,12 @@ export default authMiddleware({
   afterAuth(auth, req) {
     // Handle users who aren't authenticated
     if (!auth.userId && !auth.isPublicRoute) {
-      if (req.url === "/game") {
-        return redirectToSignUp({ returnBackUrl: "/game" });
-      } else if (req.url === "/game") {
-        return redirectToSignIn({ returnBackUrl: "/game" });
-      }
       return redirectToSignIn({ returnBackUrl: req.url });
     }
 
     // If the user is logged in and trying to access a protected route, allow them to access route
     if (auth.userId && !auth.isPublicRoute) {
-      if (req.url === "/game") {
-        return redirectToSignUp({ returnBackUrl: "/game" });
-      } else if (req.url === "/game") {
-        return redirectToSignIn({ returnBackUrl: "/game" });
-      }
       return NextResponse.next();
-    }
-
-    if (req.url === "/game") {
-      return redirectToSignUp({ returnBackUrl: "/game" });
-    } else if (req.url === "/game") {
-      return redirectToSignIn({ returnBackUrl: "/game" });
     }
     // Allow users visiting public routes to access them
     return NextResponse.next();

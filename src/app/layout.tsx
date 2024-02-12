@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignInUrl="/test" afterSignUpUrl="/test" allowedRedirectOrigins={["https://valentine.rondevu.app"]}>
       <ApolloWrapper>
         <html lang="en">
           <body className={inter.className}>{children}</body>
