@@ -35,7 +35,13 @@ const RadioSelect = ({ children }: { children: ReactNode }) => {
   return <div>{children}</div>;
 };
 
-const CreateProfileForm = ({ data, submitCallback }: { data?: ProfileType, submitCallback : ()=>void }) => {
+const CreateProfileForm = ({
+  data,
+  submitCallback,
+}: {
+  data?: ProfileType;
+  submitCallback: () => void;
+}) => {
   const numbers = [0, 1, 2, 3, 4, 5];
 
   const {
@@ -90,7 +96,7 @@ const CreateProfileForm = ({ data, submitCallback }: { data?: ProfileType, submi
       return { name: interest.name, score: parseInt(score) };
     });
     console.log("data is ");
-    
+
     console.log(data);
 
     const val = await valentineMutation({
@@ -105,7 +111,7 @@ const CreateProfileForm = ({ data, submitCallback }: { data?: ProfileType, submi
         FriendOnly: data.friend_only === "true" ? true : false,
       },
     });
-    submitCallback()
+    submitCallback();
   }
   const interestToString = (num: number) => {
     switch (num) {
@@ -237,14 +243,12 @@ const CreateProfileForm = ({ data, submitCallback }: { data?: ProfileType, submi
           <div className="pb-4">
             <label className="flex text-lg py-2">Email</label>
             <input
-              {...(register("email"))}
+              {...register("email")}
               type="text"
               placeholder="bee@gmail.com"
               className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
-            {errors.email?.type == "required" && (
-              <div>Email is required</div>
-            )}
+            {errors.email?.type == "required" && <div>Email is required</div>}
           </div>
           <div className="space-y-4">
             <div className="py-4">What are your interests?</div>
@@ -421,7 +425,7 @@ const Game = () => {
   const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
   const id = data?.myValentineProfile?._id;
   const [editMode, setEditMode] = useState(false);
-
+  const [showCopied, setShowCopied] = useState(false);
   return (
     <div className="flex min-h-screen flex-col items-center font-mono px-4 py-24 lg:p-24">
       <div className="flex justify-end w-full items-center">
@@ -435,6 +439,20 @@ const Game = () => {
             Edit
           </button>
         )}
+        {!loading && (
+          <button
+            className="px-4 mx-4 mr-8 py-2 border border-2 rounded-md	"
+            onClick={() => {
+              navigator.clipboard.writeText(location.origin);
+              setShowCopied(true);
+              setTimeout(() => {
+                setShowCopied(false);
+              }, 2000);
+            }}
+          >
+            {showCopied ? "Copied" : "Share"}
+          </button>
+        )}
         <UserButton />
       </div>
       {loading ? (
@@ -442,7 +460,12 @@ const Game = () => {
       ) : data && !editMode ? (
         <Matches id={id} />
       ) : (
-        <CreateProfileForm data={data?.myValentineProfile} submitCallback={()=>{setEditMode(false)}} />
+        <CreateProfileForm
+          data={data?.myValentineProfile}
+          submitCallback={() => {
+            setEditMode(false);
+          }}
+        />
       )}
     </div>
   );
