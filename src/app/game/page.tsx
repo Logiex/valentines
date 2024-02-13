@@ -83,7 +83,7 @@ const CreateProfileForm = ({
     const num: string = data.score.toString();
     total += parseInt(num);
   });
-  const max = ints.length * 1.5;
+  const max = ints.length * 2;
   const remainder = max - total;
 
   const [valentineMutation] = useMutation(CREATEVALENTINEPROFILE, {
