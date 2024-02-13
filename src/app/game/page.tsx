@@ -116,15 +116,15 @@ const CreateProfileForm = ({
   const interestToString = (num: number) => {
     switch (num) {
       case 0:
-        return "Don't Like";
+        return "Uninterested";
       case 1:
-        return "Barely Like";
-      case 2:
         return "Somewhat Like";
-      case 3:
+      case 2:
         return "Like";
+      case 3:
+        return "Like +";
       case 4:
-        return "Really Like";
+        return "Like ++";
       case 5:
         return "Like a lot";
       default:
