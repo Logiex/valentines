@@ -13,7 +13,7 @@ import { ReactNode } from "react";
 import { Lobster, Varela_Round } from "next/font/google";
 
 const headingFamily = Lobster({ subsets: ["latin"], weight: ["400"] });
-const mainFamily = Varela_Round({ subsets: ["latin"], weight: ["400"]})
+const mainFamily = Varela_Round({ subsets: ["latin"], weight: ["400"] });
 
 type ProfileType = {
   name: string;
@@ -24,15 +24,17 @@ type ProfileType = {
   discord?: string;
   email: string;
   _id: string | undefined;
+  friend_only: "true" | "false";
 };
 
 const notEnoughPoints = () => {
-  alert('Not enough points')
-}
+  alert("Not enough points");
+};
 
 const RadioSelect = ({ children }: { children: ReactNode }) => {
   return <div>{children}</div>;
 };
+
 const CreateProfileForm = () => {
   const numbers = [0, 1, 2, 3, 4, 5];
 
@@ -45,6 +47,7 @@ const CreateProfileForm = () => {
     defaultValues: {
       gender: "M",
       wants: "M",
+      friend_only: "false",
       interests: Interests.map((val) => {
         return {
           name: val,
@@ -56,6 +59,9 @@ const CreateProfileForm = () => {
   const ints = watch("interests");
   const gender = watch("gender");
   const wants = watch("wants");
+  const friend_only = watch("friend_only");
+  console.log(friend_only);
+
   let total = 0;
 
   ints.forEach((data) => {
@@ -74,6 +80,8 @@ const CreateProfileForm = () => {
       const score: string = interest.score.toString();
       return { name: interest.name, score: parseInt(score) };
     });
+    console.log(data);
+
     const val = await valentineMutation({
       variables: {
         Name: data.name,
@@ -83,6 +91,7 @@ const CreateProfileForm = () => {
         Interests: data.interests,
         Discord: data.discord,
         Instagram: data.instagram,
+        FriendOnly: data.friend_only === "true" ? true : false,
       },
     });
   }
@@ -105,7 +114,9 @@ const CreateProfileForm = () => {
     }
   };
   return (
-    <div className={`w-full h-full flex items-center flex-col px-4 ${mainFamily.className}`}>
+    <div
+      className={`w-full h-full flex items-center flex-col px-4 ${mainFamily.className}`}
+    >
       <div className="pb-8 text-3xl">Profile creator</div>
       <div className="w-full flex-col items-start ">
         <form
@@ -162,6 +173,31 @@ const CreateProfileForm = () => {
             </div>
           </div>
           <div className="pb-4">
+            <p>
+              Are you just looking for new friends? Like, no romantic matching?
+            </p>
+
+            <div className="flex">
+              <input
+                {...register("friend_only")}
+                type="radio"
+                value={"true"}
+                className="px-4"
+                checked={friend_only == "true"}
+                id="friend_yes"
+              />
+              <label htmlFor="friend_yes" className="px-4"  >Yes</label>
+              <input
+                {...register("friend_only")}
+                type="radio"
+                value={"false"}
+                checked={friend_only == "false"}
+                id="friend_no"
+              />
+              <label className="px-4" htmlFor="friend_no" >No</label>
+            </div>
+          </div>
+          <div className="pb-4">
             <label className="flex text-lg py-2">Instagram username</label>
             <input
               {...register("instagram", { required: true })}
@@ -195,59 +231,61 @@ const CreateProfileForm = () => {
             )}
           </div>
           <div className="space-y-4">
-          <div className="py-4">What are your interests?</div>
-          <span className="border-1 border px-8 py-2 rounded-lg w-fit border-[#d90429] flex flex-row items-center justify-center sticky top-10 bg-white ">Points left = <span className="text-3xl ml-2">{remainder}</span></span>
-          <div className="space-y-4">
-          {Interests.map((val, index) => {
-            const score = ints[index].score.toString();
-            const scoreNum = parseInt(score);
-            return (
-              <div key={index}
-              >
-                <div className="mb-4">{val}</div>
-                <div className="flex flex-col md:flex-row border-1 border px-8 py-2 rounded-lg">
-                  {numbers.map((number, idx) => {
-                    return (
-                      <div
-                        key={idx}
-                        className={`flex flex-row px-4 items-center border border-1 md:border-0 my-1 ${
-                          scoreNum == number ? "py-2" : ""
-                        } md:py-0 rounded-lg`}
-                        
-                      >
-          
-                        <input
-                          id={`${val}.${index}.${idx}`}
-                          {...register(`interests.${index}.score`)}
-                          type="radio"
-                          value={number}
-                          checked={scoreNum == number}
-                          disabled={number > scoreNum + remainder}
-                        />
-                      
-                        <label
-                          htmlFor={`${val}.${index}.${idx}`}
-                          className="px-2">
-                          {interestToString(idx)}
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-          </div>
+            <div className="py-4">What are your interests?</div>
+            <span className="border-1 border px-8 py-2 rounded-lg w-fit border-[#d90429] flex flex-row items-center justify-center sticky top-10 bg-white ">
+              Points left = <span className="text-3xl ml-2">{remainder}</span>
+            </span>
+            <div className="space-y-4">
+              {Interests.map((val, index) => {
+                const score = ints[index].score.toString();
+                const scoreNum = parseInt(score);
+                return (
+                  <div key={index}>
+                    <div className="mb-4">{val}</div>
+                    <div className="flex flex-col md:flex-row border-1 border px-8 py-2 rounded-lg">
+                      {numbers.map((number, idx) => {
+                        return (
+                          <div
+                            key={idx}
+                            className={`flex flex-row px-4 items-center border border-1 md:border-0 my-1 ${
+                              scoreNum == number ? "py-2" : ""
+                            } md:py-0 rounded-lg`}
+                          >
+                            <input
+                              id={`${val}.${index}.${idx}`}
+                              {...register(`interests.${index}.score`)}
+                              type="radio"
+                              value={number}
+                              checked={scoreNum == number}
+                              disabled={number > scoreNum + remainder}
+                            />
+
+                            <label
+                              htmlFor={`${val}.${index}.${idx}`}
+                              className="px-2"
+                            >
+                              {interestToString(idx)}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <div className="py-8 px-4 flex flex-row md:justify-center justify-end">
-            <button type="submit" className="border-2 p-4 rounded-lg  border-[#d90429] hover:cursor-pointer hover:scale-[1.2] hover:transform hover:ease-in-out duration-300">
+            <button
+              type="submit"
+              className="border-2 p-4 rounded-lg  border-[#d90429] hover:cursor-pointer hover:scale-[1.2] hover:transform hover:ease-in-out duration-300"
+            >
               Submit
             </button>
           </div>
         </form>
       </div>
     </div>
-    
   );
 };
 
@@ -362,6 +400,7 @@ const Matches = ({ id }: { id: string }) => {
     </div>
   );
 };
+
 const Game = () => {
   const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
   const id = data?.myValentineProfile?._id;
