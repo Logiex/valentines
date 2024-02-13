@@ -27,6 +27,7 @@ export const CREATEVALENTINEPROFILE = gql`
     $Interests: [GQLInterestInput!]!
     $Instagram: String!
     $Discord: String!
+    $FriendOnly: Boolean
   ) {
     createValentineProfile(
       input: {
@@ -37,6 +38,7 @@ export const CREATEVALENTINEPROFILE = gql`
         interests: $Interests
         discord: $Discord
         instagram: $Instagram
+        friendOnly: $FriendOnly
       }
     ) {
       _id
