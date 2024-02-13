@@ -9,7 +9,7 @@ import {
 } from "@/gql/gql";
 import { UserButton } from "@clerk/nextjs";
 import { PacmanLoader } from "react-spinners";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Lobster, Varela_Round } from "next/font/google";
 
 const headingFamily = Lobster({ subsets: ["latin"], weight: ["400"] });
@@ -22,9 +22,9 @@ type ProfileType = {
   interests: { name: string; score: number }[];
   instagram: string;
   discord?: string;
-  email: string;
+  email?: string;
   _id: string | undefined;
-  friend_only: "true" | "false";
+  friend_only: "true" | "false" | boolean;
 };
 
 const notEnoughPoints = () => {
@@ -35,7 +35,7 @@ const RadioSelect = ({ children }: { children: ReactNode }) => {
   return <div>{children}</div>;
 };
 
-const CreateProfileForm = () => {
+const CreateProfileForm = ({ data, submitCallback }: { data?: ProfileType, submitCallback : ()=>void }) => {
   const numbers = [0, 1, 2, 3, 4, 5];
 
   const {
@@ -45,9 +45,18 @@ const CreateProfileForm = () => {
     formState: { errors },
   } = useForm<ProfileType>({
     defaultValues: {
-      gender: "M",
-      wants: "M",
-      friend_only: "false",
+      gender: data?.gender ?? "F",
+      name: data?.name,
+      wants: data?.wants ?? "M",
+      friend_only:
+        data?.friend_only == undefined
+          ? "false"
+          : data?.friend_only == true
+          ? "true"
+          : "false",
+      discord: data?.discord,
+      instagram: data?.instagram,
+      email: data?.email,
       interests: Interests.map((val) => {
         return {
           name: val,
@@ -60,7 +69,7 @@ const CreateProfileForm = () => {
   const gender = watch("gender");
   const wants = watch("wants");
   const friend_only = watch("friend_only");
-  console.log(friend_only);
+  data && console.log(data);
 
   let total = 0;
 
@@ -80,6 +89,8 @@ const CreateProfileForm = () => {
       const score: string = interest.score.toString();
       return { name: interest.name, score: parseInt(score) };
     });
+    console.log("data is ");
+    
     console.log(data);
 
     const val = await valentineMutation({
@@ -87,13 +98,14 @@ const CreateProfileForm = () => {
         Name: data.name,
         Gender: data.gender,
         Wants: data.wants,
-        Email: data.name,
+        Email: data.email,
         Interests: data.interests,
         Discord: data.discord,
         Instagram: data.instagram,
         FriendOnly: data.friend_only === "true" ? true : false,
       },
     });
+    submitCallback()
   }
   const interestToString = (num: number) => {
     switch (num) {
@@ -186,7 +198,9 @@ const CreateProfileForm = () => {
                 checked={friend_only == "true"}
                 id="friend_yes"
               />
-              <label htmlFor="friend_yes" className="px-4"  >Yes</label>
+              <label htmlFor="friend_yes" className="px-4">
+                Yes
+              </label>
               <input
                 {...register("friend_only")}
                 type="radio"
@@ -194,7 +208,9 @@ const CreateProfileForm = () => {
                 checked={friend_only == "false"}
                 id="friend_no"
               />
-              <label className="px-4" htmlFor="friend_no" >No</label>
+              <label className="px-4" htmlFor="friend_no">
+                No
+              </label>
             </div>
           </div>
           <div className="pb-4">
@@ -221,12 +237,12 @@ const CreateProfileForm = () => {
           <div className="pb-4">
             <label className="flex text-lg py-2">Email</label>
             <input
-              {...(register("email"), { required: true })}
+              {...(register("email"))}
               type="text"
               placeholder="bee@gmail.com"
               className="text-lg w-full border-1 border px-8 py-2 rounded-lg"
             />
-            {errors.instagram?.type == "required" && (
+            {errors.email?.type == "required" && (
               <div>Email is required</div>
             )}
           </div>
@@ -404,17 +420,29 @@ const Matches = ({ id }: { id: string }) => {
 const Game = () => {
   const { data, loading } = useQuery(MYVALENTINEPROFILEQUERY);
   const id = data?.myValentineProfile?._id;
+  const [editMode, setEditMode] = useState(false);
+
   return (
     <div className="flex min-h-screen flex-col items-center font-mono px-4 py-24 lg:p-24">
-      <div className="flex justify-end w-full">
+      <div className="flex justify-end w-full items-center">
+        {!loading && !editMode && (
+          <button
+            className="px-4 mx-4 py-2 border border-2 rounded-md	"
+            onClick={() => {
+              setEditMode(!editMode);
+            }}
+          >
+            Edit
+          </button>
+        )}
         <UserButton />
       </div>
       {loading ? (
         <PacmanLoader />
-      ) : data ? (
+      ) : data && !editMode ? (
         <Matches id={id} />
       ) : (
-        <CreateProfileForm />
+        <CreateProfileForm data={data?.myValentineProfile} submitCallback={()=>{setEditMode(false)}} />
       )}
     </div>
   );
